@@ -42,7 +42,9 @@ class DeepSpeech(BaseFormatter):
                 )
                 transcript = Path(transcript_path)
                 if not transcript.is_file():
-                    raise MissingTranscription
+                    log.warning(
+                        "%s.%s is missing a transcript", filename, self.media_type
+                    )
 
                 item = Item(media_file=entry.path, transcript_file=transcript_path)
 
