@@ -32,3 +32,4 @@ TODO:
  - [ ] Fuzzy transcript matching
  - [x] Add __main__.py as a possible program entry point
    - [ ] Full CLI support
+     - [ ] Support train/test/dev split

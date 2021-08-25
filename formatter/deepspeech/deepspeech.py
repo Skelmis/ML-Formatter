@@ -13,7 +13,10 @@ log = logging.getLogger(__name__)
 class DeepSpeech(BaseFormatter):
     """
     Designed to have a lot of file read/writes to save on
-    needing to store everything in memory.
+    needing to store everything in memory. This also means
+    the process is essentially O(2) in terms of overall passes
+    as we store everything initially before splitting up into
+    train/test/dev.
     """
 
     def run(self):
@@ -70,7 +73,7 @@ class DeepSpeech(BaseFormatter):
         """Process's an item and outputs it to a generic 'all' file"""
 
     def split_into_runs(self) -> None:
-        """Splits the 'all' file into runs using the provided split ratio"""
+        """Splits the 'initial_runs' file into runs using the provided split ratio"""
 
     def _create_csv(self, csv_name: str) -> None:
         """Creates and injects headers to the given csv file"""
