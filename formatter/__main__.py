@@ -111,4 +111,4 @@ backends[args.parser](
     output_dir=args.output,
     media_type=args.media_type,
     transcript_type=args.transcript_type,
-)
+).run()

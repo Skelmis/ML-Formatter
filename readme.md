@@ -25,7 +25,9 @@ TODO:
  - [x] Add argument parsing
  - [x] Argument validation
  - [ ] Define DeepSpeech formatter
-   - [ ] Prototype
+   - [x] Handle empty media dirs
+   - [x] Handle media not having transcripts (Warn)
+   - [x] Handle non-empty output dirs
    - [ ] Add usage in __main__.py
  - [ ] Fuzzy transcript matching
  - [x] Add __main__.py as a possible program entry point
