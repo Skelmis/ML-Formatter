@@ -21,6 +21,11 @@ To view all arguments
 > python -m formatter --help
 ```
 
+Example usage
+```shell
+> python -m formatter --media ./media --transcript ./transcripts --output ./output --verbose
+```
+
 TODO:
  - [x] Add argument parsing
  - [x] Argument validation
