@@ -28,7 +28,10 @@ TODO:
    - [x] Handle empty media dirs
    - [x] Handle media not having transcripts (Warn)
    - [x] Handle non-empty output dirs
-   - [ ] Add usage in __main__.py
+   - [x] Add usage in __main__.py
+   - [ ] Actual implementation
+     - [ ] Process all files
+     - [ ] Split into train/test/dev splits
  - [ ] Fuzzy transcript matching
  - [x] Add __main__.py as a possible program entry point
    - [ ] Full CLI support
