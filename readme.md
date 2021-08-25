@@ -13,6 +13,11 @@ Currently:
 ### Usage
 
 ```shell
+> python -m formatter
+```
+
+To view all arguments
+```shell
 > python -m formatter --help
 ```
 
