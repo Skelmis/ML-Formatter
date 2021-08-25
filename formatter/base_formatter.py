@@ -18,3 +18,6 @@ class BaseFormatter:
         self.media_type = media_type
         self.transcript_type = transcript_type
         log.debug("Initialized %s", self.__class__.__name__)
+
+    def run(self):
+        raise NotImplementedError

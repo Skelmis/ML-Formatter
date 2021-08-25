@@ -6,4 +6,5 @@ log = logging.getLogger(__name__)
 
 
 class DeepSpeech(BaseFormatter):
-    pass
+    def run(self):
+        """The runner for DeepSpeech formatting"""
