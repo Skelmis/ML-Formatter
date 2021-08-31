@@ -37,6 +37,7 @@ TODO:
    - [ ] Actual implementation
      - [x] Process all files
      - [x] Split into train/test/dev splits
+     - [ ] Shuffle files before performing the split for randomisation 
      - [ ] Add the option to move files into output directory
  - [ ] Fuzzy transcript matching
  - [x] Add __main__.py as a possible program entry point
