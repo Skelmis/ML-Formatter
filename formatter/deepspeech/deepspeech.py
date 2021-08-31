@@ -21,32 +21,38 @@ class DeepSpeech(BaseFormatter):
 
     def run(self):
         """The runner for DeepSpeech formatting"""
-        found_file = False
-        with os.scandir(self.media_dir) as it:
-            entry: os.DirEntry
-            for entry in it:
-                if not entry.is_file():
-                    continue
+        self.create_initial_files()
+        with open(os.path.join(self.output_dir, "initial_runs.csv"), newline="") as f:
+            writer = csv.writer(f)
 
-                filename: str = entry.name
-                if not filename.endswith(self.media_type):
-                    continue
+            found_file = False
+            with os.scandir(self.media_dir) as it:
+                entry: os.DirEntry
+                for entry in it:
+                    if not entry.is_file():
+                        continue
 
-                # Strip filetype to use as a generic pointer
-                filename = filename[: (len(filename) - (len(self.media_type) + 1))]
+                    filename: str = entry.name
+                    if not filename.endswith(self.media_type):
+                        continue
 
-                found_file = True
-                # Okay its a valid media file, lets try find its transcription
-                transcript_path: str = os.path.join(
-                    self.transcript_dir, f"{filename}.{self.transcript_type}"
-                )
-                transcript = Path(transcript_path)
-                if not transcript.is_file():
-                    log.warning(
-                        "%s.%s is missing a transcript", filename, self.media_type
+                    # Strip filetype to use as a generic pointer
+                    filename = filename[: (len(filename) - (len(self.media_type) + 1))]
+
+                    found_file = True
+                    # Okay its a valid media file, lets try find its transcription
+                    transcript_path: str = os.path.join(
+                        self.transcript_dir, f"{filename}.{self.transcript_type}"
                     )
+                    transcript = Path(transcript_path)
+                    if not transcript.is_file():
+                        log.warning(
+                            "%s.%s is missing a transcript", filename, self.media_type
+                        )
 
-                item = Item(media_file=entry.path, transcript_file=transcript_path)
+                    item = Item(media_file=entry.path, transcript_file=transcript_path)
+
+                    self.process_item(writer, item)
 
         if not found_file:
             raise NoMedia()
@@ -71,8 +77,11 @@ class DeepSpeech(BaseFormatter):
         self._create_csv("dev")
         self._create_csv("all")
 
-    def process_item(self, item: Item) -> None:
+    def process_item(self, writer, item: Item) -> None:  # noqa
         """Process's an item and outputs it to a generic 'all' file"""
+        writer.writerow(
+            [item.media_file, item.get_media_file_size(), item.get_transcription()]
+        )
 
     def split_into_runs(self) -> None:
         """Splits the 'initial_runs' file into runs using the provided split ratio"""
