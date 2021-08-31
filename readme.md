@@ -35,8 +35,9 @@ TODO:
    - [x] Handle non-empty output dirs
    - [x] Add usage in __main__.py
    - [ ] Actual implementation
-     - [ ] Process all files
-     - [ ] Split into train/test/dev splits
+     - [x] Process all files
+     - [x] Split into train/test/dev splits
+     - [ ] Add the option to move files into output directory
  - [ ] Fuzzy transcript matching
  - [x] Add __main__.py as a possible program entry point
    - [ ] Full CLI support
