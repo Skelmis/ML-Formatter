@@ -28,6 +28,7 @@ class DeepSpeech(BaseFormatter):
 
     def run(self):
         """The runner for DeepSpeech formatting"""
+        log.info("Beginning run")
         self.create_initial_files()
         with open(
             os.path.join(self.output_dir, "all.csv"),
@@ -85,6 +86,8 @@ class DeepSpeech(BaseFormatter):
         self._create_csv("dev")
         self._create_csv("all")
 
+        log.info("Created initial files")
+
     def process_item(self, writer, item: Item) -> None:  # noqa
         """Process's an item and outputs it to a generic 'all' file"""
         writer.writerow(
@@ -94,9 +97,11 @@ class DeepSpeech(BaseFormatter):
                 item.get_transcription(),
             ]
         )
+        log.debug("Processed %s", item.media_file)
 
     def split_into_runs(self) -> None:
         """Splits the 'initial_runs' file into runs using the provided split ratio"""
+        log.info("Begin splitting files into runs")
         all_file = open(
             os.path.join(self.output_dir, "all.csv"),
             newline="",
@@ -128,22 +133,29 @@ class DeepSpeech(BaseFormatter):
         dev_writer = csv.writer(dev_file)
         test_writer = csv.writer(test_file)
         train_writer = csv.writer(train_file)
+        log.debug("Created readers")
 
         # Get dev / test / train splits
         total: int = self.line_count
         train: int = round(total * 0.7)
         test: int = round(total * 0.2)
         dev: int = round(total * 0.1)
+        log.info("Total: %d Train: %d Test: %d Dev: %d", total, train, test, dev)
 
         # Do stuff
         for count, row in enumerate(all_reader):
             if count < dev:
                 dev_writer.writerow(row)
+                log.debug("Wrote to dev: %s", row[0])
+
             # We minus this because we don't reset count
             elif (count - dev) < test:
                 test_writer.writerow(row)
+                log.debug("Wrote to test: %s", row[0])
+
             else:
                 train_writer.writerow(row)
+                log.debug("Wrote to train: %s", row[0])
 
         # Make sure to close files
         all_file.close()
