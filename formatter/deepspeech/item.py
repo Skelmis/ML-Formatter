@@ -17,7 +17,7 @@ class Item:
         str
             The absolute path to the media file
         """
-        return Path(self.media_file).absolute()
+        return Path(self.media_file).resolve()
 
     def get_absolute_transcript_path(self):
         """
@@ -26,7 +26,7 @@ class Item:
         str
             The absolute path to the transcript file
         """
-        return Path(self.transcript_file).absolute()
+        return Path(self.transcript_file).resolve()
 
     def get_media_file_size(self):
         """
