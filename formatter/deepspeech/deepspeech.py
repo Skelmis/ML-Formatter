@@ -22,7 +22,12 @@ class DeepSpeech(BaseFormatter):
     def run(self):
         """The runner for DeepSpeech formatting"""
         self.create_initial_files()
-        with open(os.path.join(self.output_dir, "initial_runs.csv"), newline="") as f:
+        with open(
+            os.path.join(self.output_dir, "initial_runs.csv"),
+            newline="",
+            mode="a",
+            encoding="utf-8",
+        ) as f:
             writer = csv.writer(f)
 
             found_file = False
@@ -60,15 +65,8 @@ class DeepSpeech(BaseFormatter):
     def create_initial_files(self) -> None:
         """Creates the initial files and sets up directories"""
         output_dir = Path(self.output_dir)
-        if not any(output_dir.iterdir()):
+        if any(output_dir.iterdir()):
             raise NonEmptyDir
-
-        try:
-            Path(os.path.join(self.output_dir, "train"))
-            Path(os.path.join(self.output_dir, "test"))
-            Path(os.path.join(self.output_dir, "dev"))
-        except FileExistsError:
-            raise NonEmptyDir from None
 
         # Setup our csv files
         self._create_csv("initial_runs")  # we delete this afterwards
@@ -80,7 +78,11 @@ class DeepSpeech(BaseFormatter):
     def process_item(self, writer, item: Item) -> None:  # noqa
         """Process's an item and outputs it to a generic 'all' file"""
         writer.writerow(
-            [item.media_file, item.get_media_file_size(), item.get_transcription()]
+            [
+                item.get_absolute_media_path(),
+                item.get_media_file_size(),
+                item.get_transcription(),
+            ]
         )
 
     def split_into_runs(self) -> None:
@@ -89,6 +91,8 @@ class DeepSpeech(BaseFormatter):
     def _create_csv(self, csv_name: str) -> None:
         """Creates and injects headers to the given csv file"""
         headers = ["wav_filename", "wav_filesize", "transcript"]
-        with open(os.path.join(self.output_dir, f"{csv_name}.csv"), newline="") as f:
+        with open(
+            os.path.join(self.output_dir, f"{csv_name}.csv"), newline="", mode="w"
+        ) as f:
             writer = csv.writer(f)
             writer.writerow(headers)
