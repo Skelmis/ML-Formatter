@@ -10,6 +10,9 @@ from formatter.exceptions import NoMedia, MissingTranscription, NonEmptyDir
 log = logging.getLogger(__name__)
 
 
+# TODO We should shuffle the file to produce more random results,
+#   however reading massive files into memory to perform a shuffle is
+#   not going to work for our use case
 class DeepSpeech(BaseFormatter):
     """
     Designed to have a lot of file read/writes to save on
@@ -19,11 +22,15 @@ class DeepSpeech(BaseFormatter):
     train/test/dev.
     """
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.line_count = 0
+
     def run(self):
         """The runner for DeepSpeech formatting"""
         self.create_initial_files()
         with open(
-            os.path.join(self.output_dir, "initial_runs.csv"),
+            os.path.join(self.output_dir, "all.csv"),
             newline="",
             mode="a",
             encoding="utf-8",
@@ -58,9 +65,13 @@ class DeepSpeech(BaseFormatter):
                     item = Item(media_file=entry.path, transcript_file=transcript_path)
 
                     self.process_item(writer, item)
+                    self.line_count += 1
 
         if not found_file:
             raise NoMedia()
+
+        # Split em up
+        self.split_into_runs()
 
     def create_initial_files(self) -> None:
         """Creates the initial files and sets up directories"""
@@ -69,7 +80,6 @@ class DeepSpeech(BaseFormatter):
             raise NonEmptyDir
 
         # Setup our csv files
-        self._create_csv("initial_runs")  # we delete this afterwards
         self._create_csv("train")
         self._create_csv("test")
         self._create_csv("dev")
@@ -87,6 +97,59 @@ class DeepSpeech(BaseFormatter):
 
     def split_into_runs(self) -> None:
         """Splits the 'initial_runs' file into runs using the provided split ratio"""
+        all_file = open(
+            os.path.join(self.output_dir, "all.csv"),
+            newline="",
+            mode="r",
+            encoding="utf-8",
+        )
+        dev_file = open(
+            os.path.join(self.output_dir, "dev.csv"),
+            newline="",
+            mode="a",
+            encoding="utf-8",
+        )
+        test_file = open(
+            os.path.join(self.output_dir, "test.csv"),
+            newline="",
+            mode="a",
+            encoding="utf-8",
+        )
+        train_file = open(
+            os.path.join(self.output_dir, "train.csv"),
+            newline="",
+            mode="a",
+            encoding="utf-8",
+        )
+
+        # Make readers n writers
+        all_reader = csv.reader(all_file)
+        next(all_reader)  # Skip headers
+        dev_writer = csv.writer(dev_file)
+        test_writer = csv.writer(test_file)
+        train_writer = csv.writer(train_file)
+
+        # Get dev / test / train splits
+        total: int = self.line_count
+        train: int = round(total * 0.7)
+        test: int = round(total * 0.2)
+        dev: int = round(total * 0.1)
+
+        # Do stuff
+        for count, row in enumerate(all_reader):
+            if count < dev:
+                dev_writer.writerow(row)
+            # We minus this because we don't reset count
+            elif (count - dev) < test:
+                test_writer.writerow(row)
+            else:
+                train_writer.writerow(row)
+
+        # Make sure to close files
+        all_file.close()
+        dev_file.close()
+        test_file.close()
+        train_file.close()
 
     def _create_csv(self, csv_name: str) -> None:
         """Creates and injects headers to the given csv file"""
