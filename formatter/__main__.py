@@ -35,6 +35,24 @@ log_level = parser.add_mutually_exclusive_group()
 log_level.add_argument("-v", "--verbose", action="store_true")
 log_level.add_argument("-q", "--quiet", action="store_true")
 parser.add_argument(
+    "--train",
+    default=0.7,
+    type=float,
+    help="Training part of train/test/val split. Out of 1",
+)
+parser.add_argument(
+    "--test",
+    default=0.2,
+    type=float,
+    help="Testing part of train/test/val split. Out of 1",
+)
+parser.add_argument(
+    "--val",
+    default=0.1,
+    type=float,
+    help="Validation part of train/test/val split. Out of 1",
+)
+parser.add_argument(
     "--parser",
     choices=["deepspeech"],
     default="deepspeech",
@@ -92,6 +110,14 @@ else:
         level=logging.WARN,
     )
 
+# Get train / test / val split
+train = args.train
+test = args.test
+val = args.val
+total = train + test + val
+
+if round(total) != 1:
+    raise RuntimeError("Train + Test + Validation split must equal 1")
 
 log = logging.getLogger(__name__)
 log.debug("Media directory: %s", args.media)
@@ -111,4 +137,7 @@ backends[args.parser](
     output_dir=args.output,
     media_type=args.media_type,
     transcript_type=args.transcript_type,
+    train=train,
+    test=test,
+    val=val,
 ).run()

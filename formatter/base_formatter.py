@@ -11,12 +11,18 @@ class BaseFormatter:
         output_dir,
         media_type,
         transcript_type,
+        train,
+        test,
+        val,
     ):
         self.media_dir = media_dir
         self.transcript_dir = transcript_dir
         self.output_dir = output_dir
         self.media_type = media_type
         self.transcript_type = transcript_type
+        self.train_percent = train
+        self.test_percent = test
+        self.val_percent = val
         log.info("Initialized %s", self.__class__.__name__)
 
     def run(self):
