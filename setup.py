@@ -16,7 +16,7 @@ with open("formatter/__init__.py") as stream:
 version = match.group(2)
 
 setuptools.setup(
-    name="ml-formatter",
+    name="ML-Formatter",
     version=version,
     author="Skelmis",
     author_email="ethan@koldfusion.xyz",

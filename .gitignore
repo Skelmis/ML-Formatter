@@ -4,3 +4,6 @@ venv
 .git
 testing
 in
+dist/*
+build/
+ML-Formatter.egg-info/
