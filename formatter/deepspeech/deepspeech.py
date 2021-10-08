@@ -60,10 +60,16 @@ class DeepSpeech(BaseFormatter):
                     transcript = Path(transcript_path)
                     if not transcript.is_file():
                         log.warning(
-                            "%s.%s is missing a transcript", filename, self.media_type
+                            "%s.%s is missing a transcript",
+                            filename,
+                            f"{filename}.{self.transcript_type}",
                         )
 
-                    item = Item(media_file=entry.path, transcript_file=transcript_path)
+                    item = Item(
+                        media_file=entry.path,
+                        transcript_file=transcript_path,
+                        media_name=filename,
+                    )
 
                     self.process_item(writer, item)
                     self.line_count += 1
@@ -80,6 +86,9 @@ class DeepSpeech(BaseFormatter):
         if any(output_dir.iterdir()):
             raise NonEmptyDir
 
+        # Make the media directory
+        Path(os.path.join(self.output_dir, "media")).mkdir(parents=True)
+
         # Setup our csv files
         self._create_csv("train")
         self._create_csv("test")
@@ -90,9 +99,11 @@ class DeepSpeech(BaseFormatter):
 
     def process_item(self, writer, item: Item) -> None:  # noqa
         """Process's an item and outputs it to a generic 'all' file"""
+        path = self._hard_link(item)
+
         writer.writerow(
             [
-                item.get_absolute_media_path(),
+                path,
                 item.get_media_file_size(),
                 item.get_transcription(),
             ]
@@ -128,8 +139,8 @@ class DeepSpeech(BaseFormatter):
         )
 
         # Make readers n writers
-        all_reader = csv.reader(all_file)
-        next(all_reader)  # Skip headers
+        all_file_writer = csv.reader(all_file)
+        next(all_file_writer)  # Skip headers
         dev_writer = csv.writer(dev_file)
         test_writer = csv.writer(test_file)
         train_writer = csv.writer(train_file)
@@ -143,7 +154,7 @@ class DeepSpeech(BaseFormatter):
         log.info("Total: %d Train: %d Test: %d Dev: %d", total, train, test, dev)
 
         # Do stuff
-        for count, row in enumerate(all_reader):
+        for count, row in enumerate(all_file_writer):
             if count < dev:
                 dev_writer.writerow(row)
                 log.debug("Wrote to dev: %s", row[0])
@@ -162,6 +173,20 @@ class DeepSpeech(BaseFormatter):
         dev_file.close()
         test_file.close()
         train_file.close()
+
+    def _hard_link(self, item: Item) -> str:
+        """Given a file, hardlink it into the output folder
+
+        Returns
+        -------
+        The linked file path
+        """
+        src = item.get_absolute_media_path()
+        dst: str = os.path.join(
+            self.output_dir, "media", f"{item.media_name}.{self.media_type}"
+        )
+        os.link(src, dst)
+        return dst
 
     def _create_csv(self, csv_name: str) -> None:
         """Creates and injects headers to the given csv file"""

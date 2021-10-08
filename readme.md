@@ -38,7 +38,7 @@ TODO:
      - [x] Process all files
      - [x] Split into train/test/dev splits
      - [ ] Shuffle files before performing the split for randomisation 
-     - [ ] Add the option to move files into output directory
+     - [x] Move files to output dir (Hard linking)
  - [ ] Fuzzy transcript matching
  - [x] Add __main__.py as a possible program entry point
    - [ ] Full CLI support

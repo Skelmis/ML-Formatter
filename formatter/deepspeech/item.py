@@ -7,6 +7,7 @@ import attr
 class Item:
     """Represents a set of files"""
 
+    media_name: str = attr.ib()  # Wav filename
     media_file: str = attr.ib()  # Path to media file
     transcript_file: str = attr.ib()  # Path to transcript file
 
