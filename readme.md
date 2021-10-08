@@ -19,26 +19,31 @@ Currently:
 To view all arguments
 ```shell
 > python -m formatter --help
+usage: __main__.py [-h] [-v | -q] [--dont-shuffle] [--train TRAIN] [--test TEST] [--val VAL] [--parser {deepspeech}] [--media_type {wav}]
+                   [--transcript_type {txt}] [--media MEDIA] [--transcript TRANSCRIPT] [--output OUTPUT]
+
+Given a set of media, create and output to the required spec of certain ML programs
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose
+  -q, --quiet
+  --dont-shuffle        Don't shuffle before splitting into runs
+  --train TRAIN         Training part of train/test/val split. Out of 1
+  --test TEST           Testing part of train/test/val split. Out of 1
+  --val VAL             Validation part of train/test/val split. Out of 1
+  --parser {deepspeech}
+                        The format you wish to receive as output
+  --media_type {wav}    The file extension of media files
+  --transcript_type {txt}
+                        The file extension of text transcript files
+  --media MEDIA         Path to the directory containing media files
+  --transcript TRANSCRIPT
+                        Path to files containing text transcripts
+  --output OUTPUT       Path to directory to use as an output folder
 ```
 
 Example usage
 ```shell
 > python -m formatter --media ./media --transcript ./transcripts --output ./output --verbose
 ```
-
-TODO:
- - [x] Add argument parsing
- - [x] Argument validation
- - [x] Define DeepSpeech formatter
-   - [x] Handle empty media dirs
-   - [x] Handle media not having transcripts (Warn)
-   - [x] Handle non-empty output dirs
-   - [x] Add usage in __main__.py
-   - [x] Actual implementation
-     - [x] Process all files
-     - [x] Split into train/test/dev splits
-     - [x] Shuffle files before performing the split for randomisation 
-     - [x] Move files to output dir (Hard linking)
- - [x] Add __main__.py as a possible program entry point
-   - [x] Full CLI support
-     - [x] Support train/test/dev split
