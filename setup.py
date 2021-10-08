@@ -1,7 +1,6 @@
 import re
 
 import setuptools
-import unittest
 
 
 with open("readme.md", "r") as fh:
@@ -11,7 +10,7 @@ _version_regex = (
     r"^__version__ = ('|\")((?:[0-9]+\.)*[0-9]+(?:\.?([a-z]+)(?:\.?[0-9])?)?)\1$"
 )
 
-with open("antispam/__init__.py") as stream:
+with open("formatter/__init__.py") as stream:
     match = re.search(_version_regex, stream.read(), re.MULTILINE)
 
 version = match.group(2)
