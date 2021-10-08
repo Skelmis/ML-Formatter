@@ -6,4 +6,4 @@ testing
 in
 dist/*
 build/
-ML-Formatter.egg-info/
+ML_Formatter.egg-info/*
