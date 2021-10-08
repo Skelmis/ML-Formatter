@@ -132,7 +132,7 @@ log.debug("Transcript file type: %s", args.transcript_type)
 log.debug("Output directory: %s", args.output)
 log.debug("Selected parser: %s", args.parser)
 
-# Setup ghetto switch statement
+# Setup dict based switch statement
 backends = {"deepspeech": DeepSpeech}
 
 # Lets us do cool things like this
