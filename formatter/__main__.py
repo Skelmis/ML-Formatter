@@ -35,6 +35,11 @@ log_level = parser.add_mutually_exclusive_group()
 log_level.add_argument("-v", "--verbose", action="store_true")
 log_level.add_argument("-q", "--quiet", action="store_true")
 parser.add_argument(
+    "--dont-shuffle",
+    action="store_true",
+    help="Don't shuffle before splitting into runs",
+)
+parser.add_argument(
     "--train",
     default=0.7,
     type=float,
@@ -140,4 +145,5 @@ backends[args.parser](
     train=train,
     test=test,
     val=val,
+    dont_shuffle=args.dont_shuffle,
 ).run()

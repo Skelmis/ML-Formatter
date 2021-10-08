@@ -29,17 +29,16 @@ Example usage
 TODO:
  - [x] Add argument parsing
  - [x] Argument validation
- - [ ] Define DeepSpeech formatter
+ - [x] Define DeepSpeech formatter
    - [x] Handle empty media dirs
    - [x] Handle media not having transcripts (Warn)
    - [x] Handle non-empty output dirs
    - [x] Add usage in __main__.py
-   - [ ] Actual implementation
+   - [x] Actual implementation
      - [x] Process all files
      - [x] Split into train/test/dev splits
-     - [ ] Shuffle files before performing the split for randomisation 
+     - [x] Shuffle files before performing the split for randomisation 
      - [x] Move files to output dir (Hard linking)
- - [ ] Fuzzy transcript matching
  - [x] Add __main__.py as a possible program entry point
-   - [ ] Full CLI support
-     - [ ] Support train/test/dev split
+   - [x] Full CLI support
+     - [x] Support train/test/dev split

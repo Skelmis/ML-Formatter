@@ -2,6 +2,7 @@ import logging
 import os
 from pathlib import Path
 import csv
+from random import shuffle
 
 from formatter.base_formatter import BaseFormatter
 from formatter.deepspeech.item import Item
@@ -139,8 +140,8 @@ class DeepSpeech(BaseFormatter):
         )
 
         # Make readers n writers
-        all_file_writer = csv.reader(all_file)
-        next(all_file_writer)  # Skip headers
+        all_file_reader = csv.reader(all_file)
+        next(all_file_reader)  # Skip headers
         dev_writer = csv.writer(dev_file)
         test_writer = csv.writer(test_file)
         train_writer = csv.writer(train_file)
@@ -153,8 +154,12 @@ class DeepSpeech(BaseFormatter):
         dev: int = round(total * 0.1)
         log.info("Total: %d Train: %d Test: %d Dev: %d", total, train, test, dev)
 
-        # Do stuff
-        for count, row in enumerate(all_file_writer):
+        # Args say we should shuffle this data before use
+        if not self.dont_shuffle:
+            all_file_reader = list(all_file_reader)
+            shuffle(all_file_reader)
+
+        for count, row in enumerate(all_file_reader):
             if count < dev:
                 dev_writer.writerow(row)
                 log.debug("Wrote to dev: %s", row[0])

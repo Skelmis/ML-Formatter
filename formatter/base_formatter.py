@@ -14,6 +14,7 @@ class BaseFormatter:
         train,
         test,
         val,
+        dont_shuffle,
     ):
         self.media_dir = media_dir
         self.transcript_dir = transcript_dir
@@ -23,6 +24,7 @@ class BaseFormatter:
         self.train_percent = train
         self.test_percent = test
         self.val_percent = val
+        self.dont_shuffle = dont_shuffle
         log.info("Initialized %s", self.__class__.__name__)
 
     def run(self):
