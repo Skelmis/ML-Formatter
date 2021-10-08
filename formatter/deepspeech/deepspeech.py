@@ -11,9 +11,6 @@ from formatter.exceptions import NoMedia, MissingTranscription, NonEmptyDir
 log = logging.getLogger(__name__)
 
 
-# TODO We should shuffle the file to produce more random results,
-#   however reading massive files into memory to perform a shuffle is
-#   not going to work for our use case
 class DeepSpeech(BaseFormatter):
     """
     Designed to have a lot of file read/writes to save on
