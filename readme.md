@@ -1,6 +1,8 @@
 ML Formatter
 ------------
 
+** Moved to: ** https://github.com/ateaspace/ML-Formatter
+
 A simple set of scripts that take act as a middle man for media 
 intake during  machine learning pipelines. 
 
